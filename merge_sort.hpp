@@ -1,5 +1,5 @@
-#ifndef MERGE_HPP
-#define MERGE_HPP
+#ifndef MERGE_SORT_HPP
+#define MERGE_SORT_HPP
 
 #include <vector>
 #include <iterator>
