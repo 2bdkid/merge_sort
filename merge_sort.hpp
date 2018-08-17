@@ -16,13 +16,13 @@ namespace sorting {
     template<typename RandomIt1, typename RandomIt2, typename OutIt>
     OutIt merge(RandomIt1 left, RandomIt1 left_end, RandomIt2 right, RandomIt2 right_end, OutIt out) {
       while(left < left_end && right < right_end) {
-	if (*left < *right) {
-	  *out++ = std::move(*left++);
-	} else {
-	  *out++ = std::move(*right++);
-	}
+        if (*left < *right) {
+          *out++ = std::move(*left++);
+        } else {
+          *out++ = std::move(*right++);
+        }
       }
-
+      
       std::move(left, left_end, out);
       std::move(right, right_end, out);
       return out;
