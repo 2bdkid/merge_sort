@@ -44,7 +44,7 @@ namespace sorting {
   }
   
   template<typename RandomIt>
-  void merge_sort(RandomIt begin, RandomIt end) noexcept {
+  void merge_sort(RandomIt begin, RandomIt end) {
     using value_type = typename std::iterator_traits<RandomIt>::value_type;
     std::vector<value_type> scratch_buffer;
     scratch_buffer.reserve(end - begin);
