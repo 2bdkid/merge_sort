@@ -44,9 +44,13 @@ namespace sorting {
   }
   
   template<typename RandomIt>
-  void merge_sort(RandomIt begin, RandomIt end) {
+  void merge_sort(RandomIt begin, RandomIt end) noexcept {
     using value_type = typename std::iterator_traits<RandomIt>::value_type;
-    auto scratch_buffer = std::vector<value_type>(std::make_move_iterator(begin), std::make_move_iterator(end));
+    std::vector<value_type> scratch_buffer;
+    scratch_buffer.reserve(end - begin);
+    // replacement for no move_if_no_except_iterator
+    for (auto i = begin; i != end; ++i)
+      scratch_buffer.push_back(std::move_if_noexcept(*i));
     detail::merge_sort(begin, end, scratch_buffer.begin(), scratch_buffer.end());
   }
 }
