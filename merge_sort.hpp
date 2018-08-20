@@ -8,9 +8,20 @@
 
 namespace sorting {
   namespace detail {
+    template<typename InputIt>
+    InputIt middle_iterator(InputIt begin, InputIt end, std::input_iterator_tag) noexcept {
+      return std::next(begin, std::distance(begin, end) / 2);
+    }
+
     template<typename RandomIt>
-    RandomIt middle_iterator(RandomIt begin, RandomIt end) noexcept {
+    RandomIt middle_iterator(RandomIt begin, RandomIt end, std::random_access_iterator_tag) noexcept {
       return std::next(begin, (end - begin) / 2);
+    }
+    
+    template<typename InputIt>
+    InputIt middle_iterator(InputIt begin, InputIt end) noexcept {
+      using tag = typename std::iterator_traits<InputIt>::iterator_category;
+      return detail::middle_iterator(begin, end, tag{});
     }
 
     template<typename InputIt, typename OutIt>
