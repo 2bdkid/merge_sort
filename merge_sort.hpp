@@ -31,38 +31,37 @@ namespace sorting {
       return out;
     }
 
-    template<typename RandomIt1, typename RandomIt2, typename OutIt>
-    OutIt merge(RandomIt1 left, RandomIt1 left_end, RandomIt2 right, RandomIt2 right_end, OutIt out) noexcept {
-      while(left < left_end && right < right_end) {
+    template<typename InputIt1, typename InputIt2, typename OutIt>
+    OutIt merge(InputIt1 left, InputIt1 left_end, InputIt2 right, InputIt2 right_end, OutIt out) noexcept {
+      while(left < left_end && right < right_end)
         (*left < *right) ? *out++ = std::move_if_noexcept(*left++) : *out++ = std::move_if_noexcept(*right++);
-       }
       
       detail::move_if_noexcept(left, left_end, out);
       detail::move_if_noexcept(right, right_end, out);
       return out;
     }
 
-    template<typename RandomIt1, typename RandomIt2>
-    void merge_sort(RandomIt1 begin, RandomIt1 end, RandomIt2 scratch_begin, RandomIt2 scratch_end) noexcept {
-      if (end - begin > 1) {
+    template<typename InputIt1, typename InputIt2>
+    void merge_sort(InputIt1 begin, InputIt1 end, InputIt2 temp_begin, InputIt2 temp_end) noexcept {
+      if (std::distance(begin, end) > 1) {
 	const auto mid = detail::middle_iterator(begin, end);
-	const auto scratch_mid = detail::middle_iterator(scratch_begin, scratch_end);
-	detail::merge_sort(scratch_begin, scratch_mid, begin, mid);
-	detail::merge_sort(scratch_mid, scratch_end, mid, end);
-	detail::merge(scratch_begin, scratch_mid, scratch_mid, scratch_end, begin);
+	const auto temp_mid = detail::middle_iterator(temp_begin, temp_end);
+	detail::merge_sort(temp_begin, temp_mid, begin, mid);
+	detail::merge_sort(temp_mid, temp_end, mid, end);
+	detail::merge(temp_begin, temp_mid, temp_mid, temp_end, begin);
       }
     }
   }
-  
-  template<typename RandomIt>
-  void merge_sort(RandomIt begin, RandomIt end) {
-    using value_type = typename std::iterator_traits<RandomIt>::value_type;
-    std::vector<value_type> scratch_buffer;
-    scratch_buffer.reserve(end - begin);
+   
+  template<typename InputIt>
+  void merge_sort(InputIt begin, InputIt end) {
+    using value_type = typename std::iterator_traits<InputIt>::value_type;
+    std::vector<value_type> temp;
+    temp.reserve(end - begin);
     // replacement for no move_if_no_except_iterator
     for (auto i = begin; i != end; ++i)
-      scratch_buffer.push_back(std::move_if_noexcept(*i));
-    detail::merge_sort(begin, end, scratch_buffer.begin(), scratch_buffer.end());
+      temp.push_back(std::move_if_noexcept(*i));
+    detail::merge_sort(begin, end, temp.begin(), temp.end());
   }
 }
 
